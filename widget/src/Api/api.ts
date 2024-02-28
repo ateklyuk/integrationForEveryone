@@ -12,7 +12,7 @@ export default new class api {
     private user_id: null | number = null
     private AMO_TOKEN_PATH: null | string = null
     private ROOT_PATH: null | string = null
-    public loginHandler = async (req: LoginRequest, res: Response) => {
+    public loginHandler = async (req: LoginRequest, res: Response): Promise<Response> => {
         try {
             const ROOT_PATH = `https://${req.query.referer}`;
             const data = {
@@ -27,12 +27,12 @@ export default new class api {
             const {account_id} = decode
             const AMO_TOKEN_PATH = `amo_tokens/${String(account_id)}_token.json`;
             fs.writeFileSync(AMO_TOKEN_PATH, JSON.stringify(token.data));
-            console.log("Токен получен и записан")
+            return res.status(200).json({message: "Токен получен"})
         } catch (error) {
             return res.status(400).json({message: "Ошибка в запросе"})
         }
     }
-    public logoutHandler = (req: LogoutRequest, res: Response) => {
+    public logoutHandler = (req: LogoutRequest, res: Response): Response => {
         try {
             fs.unlinkSync(`amo_tokens/${req.query.account_id}_token.json`);
             this.access_token = null
@@ -40,7 +40,7 @@ export default new class api {
             this.user_id = null
             this.AMO_TOKEN_PATH = null
             this.ROOT_PATH = null
-            console.log("Токен удален")
+            return res.status(200).json({message: "Токен удален"})
         } catch (error) {
             return res.status(400).json({message: "У этого аккаунта нет токена"})
         }
@@ -57,13 +57,12 @@ export default new class api {
             });
         };
     };
-    public getTokens = (req: getQuery, res: Response, next: Function) => {
+    public getTokens = (req: getQuery, res: Response, next: Function): void | Response => {
         if (this.access_token) {
             next()
         }
         try {
             const {accountId, subdomain} = req.query
-            console.log(accountId)
             this.user_id = accountId
             this.ROOT_PATH = `https://${subdomain}.amocrm.ru`
             this.AMO_TOKEN_PATH = `amo_tokens/${String(this.user_id)}_token.json`;
@@ -92,7 +91,6 @@ export default new class api {
             fs.writeFileSync(AMO_TOKEN_PATH, JSON.stringify(token.data));
             this.access_token = token.data.access_token
             this.refresh_token = token.data.refresh_token
-            console.log("Токен успешно обновлен")
             return token
         } catch (error) {
             return error

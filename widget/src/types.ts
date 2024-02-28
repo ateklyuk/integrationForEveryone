@@ -5,8 +5,6 @@ export type Config = {
     PORT: number,
 }
 
-export type query = {}
-
 export type ErrData = {
     config: {
       headers: {
