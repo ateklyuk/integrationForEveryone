@@ -5,6 +5,7 @@ import {Response} from "express";
 import {config} from "../config";
 import {jwtDecode} from "jwt-decode";
 import fs from "fs";
+import {logger} from "../logger";
 
 export default new class api {
     private access_token: null | string = null;
@@ -40,8 +41,10 @@ export default new class api {
             this.user_id = null
             this.AMO_TOKEN_PATH = null
             this.ROOT_PATH = null
+            logger.debug("Токен удален")
             return res.status(200).json({message: "Токен удален"})
         } catch (error) {
+            logger.error("Нет токена у пользователя", error)
             return res.status(400).json({message: "У этого аккаунта нет токена"})
         }
     }
@@ -50,7 +53,7 @@ export default new class api {
             return request(...args).catch((err: ErrData) => {
                 const data = err.response.data;
                 if (data.status == 401 && data.title === "Unauthorized") {
-                    console.log("Нужно обновить токен");
+                    logger.debug("Нужно обновить токен")
                     return this.refreshToken().then(() => this.authChecker(request)(...args));
                 }
                 throw err;
@@ -70,8 +73,10 @@ export default new class api {
             const token = JSON.parse(content.toString());
             this.access_token = token.access_token;
             this.refresh_token = token.refresh_token;
+            logger.debug("Токен успешно получен")
             next()
         } catch (error) {
+            logger.error("Некорректный ID или файл с токеном утерян", error)
             return res.status(400).json({message: "Некорректный ID или файл с токеном утерян"})
         }
     }
@@ -91,13 +96,14 @@ export default new class api {
             fs.writeFileSync(AMO_TOKEN_PATH, JSON.stringify(token.data));
             this.access_token = token.data.access_token
             this.refresh_token = token.data.refresh_token
+            logger.debug("токен успешно обновлен и записан")
             return token
         } catch (error) {
             return error
         }
     }
     public test = this.authChecker((): Promise<object> => {
-        return axios.get(`https://${this.ROOT_PATH}/api/v4/contacts/${35435}?${querystring.stringify({
+        return axios.get(`${this.ROOT_PATH}/api/v4/contacts/${35435}?${querystring.stringify({
                 with: ["leads"]
             })}`, {
                 headers: {
