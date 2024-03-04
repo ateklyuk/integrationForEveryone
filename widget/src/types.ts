@@ -1,3 +1,4 @@
+
 export type Config = {
     CLIENT_ID: string,
     CLIENT_SECRET: string,
@@ -43,8 +44,19 @@ export type Token = {
 }
 
 export type getQuery = {
-    query: {
-        accountId: number,
-        subdomain: string
+    body: {
+        account: {
+            subdomain: string,
+            id: string,
+        }
     }
+}
+
+export type DataType = {
+    client_id: string,
+    client_secret: string,
+    redirect_uri: string,
+    grant_type: string,
+    code?: string | null,
+    refresh_token?: string | null,
 }
