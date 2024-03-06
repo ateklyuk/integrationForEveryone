@@ -1,11 +1,14 @@
 import Router from "express";
 import Api from "../Api/api";
+import {loginHandler} from "../Api/loginHandler";
+import {logoutHandler} from "../Api/logoutHandler";
 
 const router = Router()
-const api = new Api()
 
-router.get("/login", api.loginHandler)
-router.get("/logout", api.logoutHandler)
-router.post("/changedeal", api.getTokens, api.test)
-
+router.get("/login", loginHandler)
+router.get("/logout", logoutHandler)
+router.post("/changedeal",(req, res) => {
+    const api = new Api()
+    api.getTokens(req).then(api.test)
+})
 export default router

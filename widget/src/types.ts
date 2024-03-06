@@ -4,6 +4,7 @@ export type Config = {
     CLIENT_SECRET: string,
     REDIRECT_URI: string,
     PORT: number,
+    DB_URI: string
 }
 
 export type ErrData = {
@@ -43,7 +44,7 @@ export type Token = {
     }
 }
 
-export type getQuery = {
+export type GetQuery = {
     body: {
         account: {
             subdomain: string,
@@ -57,6 +58,16 @@ export type DataType = {
     client_secret: string,
     redirect_uri: string,
     grant_type: string,
-    code?: string | null,
-    refresh_token?: string | null,
+    code?: string,
+    refresh_token?: string ,
+}
+
+export type FileData = {
+    authorization_code?: string ,
+    id?: number ,
+    subdomain?: string ,
+    token_type: string,
+    expires_in: number,
+    access_token: string,
+    refresh_token: string
 }
