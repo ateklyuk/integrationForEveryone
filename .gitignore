@@ -1,2 +1,4 @@
-widget/node_modules
-widget/build
+/node_modules
+/build
+.idea
+/logs

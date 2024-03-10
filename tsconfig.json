@@ -1,0 +1,24 @@
+{
+	"exclude": ["widget"],
+	"compilerOptions": {
+		"target": "ES2022",
+
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"allowJs": true,
+		 "sourceMap": true,
+		 "outDir": "./build",
+		 "removeComments": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noImplicitAny": true,
+		"skipLibCheck": true
+	},
+	"include": [
+      "../src/**/*"
+    ],
+	"exclude": ["node_modules"],
+	"lib": ["esnext"]
+}
