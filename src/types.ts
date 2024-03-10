@@ -69,5 +69,11 @@ export type FileData = {
     token_type: string,
     expires_in: number,
     access_token: string,
-    refresh_token: string
+    refresh_token: string,
+    is_installed?: boolean
+}
+export type TestArgs = {
+    accountId: number;
+    subdomain: string;
+    userId: number
 }

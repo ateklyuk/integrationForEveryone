@@ -7,7 +7,9 @@ const UserSchema = new Schema({
     access_token: { type: String },
     refresh_token: { type: String },
     subdomain: { type: String },
-    authorization_code: { type: String }
+    authorization_code: { type: String },
+    is_installed: { type: Boolean }
+
 }, { timestamps: true })
 
 export default model("User", UserSchema)
